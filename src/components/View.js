@@ -1,15 +1,52 @@
-import React, { useState } from 'react';
+import React,  { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
 import Article from './Article';
 import EditForm from './EditForm';
+import axiosWithAuth from "../utils/axiosWithAuth";
+import axios from 'axios';
 
 const View = (props) => {
     const [articles, setArticles] = useState([]);
     const [editing, setEditing] = useState(false);
     const [editId, setEditId] = useState();
+    
+    
+    
+
+
+        //no reason to have it in another file honestly, dont feel bad about it myself
+        //seems better than calling 5 different methods on something just to mount data.
+        //granted i need to learn more about using hooks inside of hooks and at the same time getting data from functions
+
+    
+        useEffect(() => {
+    
+            axiosWithAuth()
+              .get(`http://localhost:5000/api/articles`)
+              .then((res) => {
+                setArticles(res.data)
+                console.log(res.data)
+            })
+              .catch((err) => {
+                console.log(err)
+            });
+    
+        }, []);
+    
+    
 
     const handleDelete = (id) => {
+        const validateStatus = localStorage.getItem('token')
+        axios.delete(`http://localhost:5000/api/articles/${id}`,{
+            headers: {
+              Authorization: validateStatus
+            },
+            })
+            .then(res => {
+                console.log(res)
+                setArticles(res.data)
+            })
+            .catch(err => console.log(err))
     }
 
     const handleEdit = (article) => {

@@ -1,23 +1,43 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Route, Redirect } from "react-router-dom";
 import PrivateRoute from './PrivateRoute';
 import styled from 'styled-components';
 
 import Header from './Header';
 import LambdaHeader from './LambdaHeader';
-import View from './View';
 import Login from './Login';
-import Logout from './Logout';
+
+
 
 const App = () => {
+
+  const [global, setGlobal] = useState({
+    auth: {
+      isLogged: false,
+    }
+  })
+  
+
   return (
     <AppContainer>
       <LambdaHeader/>
       <Header/>
       <RouteContainer>
         <Route exact path="/">
-          <Login/>
-        </Route>          
+          { !localStorage.username &&
+            <Login/>
+          }
+        </Route>
+        {/* not sure why instructed to do this in readme line 30 */}
+        { !localStorage.username &&
+          <Route path='/login'> 
+            <Login/> 
+          </Route>
+        }
+        <Route path='/view'>
+          <PrivateRoute/>
+        </Route>
+                
       </RouteContainer>
     </AppContainer>
   )

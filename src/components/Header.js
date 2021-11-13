@@ -7,9 +7,13 @@ const Header = () => {
         <HeaderStyle>
             <p>Blogger Pro</p>
             <MenuStyle>
+                { !localStorage.username &&
                 <li><Link to="/">Login</Link></li>
+                }
                 <li><Link to="view">View</Link></li>
+                { localStorage.username &&
                 <li><Link to="logout">Logout</Link></li>
+                }
             </MenuStyle>
         </HeaderStyle>
     );

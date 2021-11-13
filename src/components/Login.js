@@ -1,14 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios'
 
-const Login = () => {
+const Login = (props) => {
+    //creating local state
+    const {push} = useHistory();
+    const [localLog, setLocalLog] = useState({
+        
+        attempt:{
+            username:'',
+            password:''
+        },
+
+        failure: false
+    })
+
     
+    //updating local state onchange
+    const update =(e)=>{
+        setLocalLog({
+          attempt: {
+            ...localLog.attempt,
+            [e.target.name]:e.target.value
+            }
+        });
+    }
+    //sending local state as req for login auth
+    const submitLog=(e)=>{
+
+        e.preventDefault()
+        axios.post('http://localhost:5000/api/login', localLog.attempt)
+          .then(res => {
+              //setting localstorage items and updating App.js state
+            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('role', res.data.role)
+            localStorage.setItem('username', res.data.username)
+            push('/view')
+          })
+          .catch(err => {
+              setLocalLog({ failure: !localLog.failure })
+          })
+          
+    }
+
+
+
+
     return(<ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            { localLog.failure &&
+                <p id='error'> make sure all fields are valid! </p>
+            }
+            <form onSubmit={submitLog}>
+                <label>
+                    username:&nbsp;
+                    <input 
+                    onChange={update}
+                    name='username'
+                    type='text' 
+                    id='username'/>
+                </label>
+                <label>
+                    password:&nbsp;
+                    <input 
+                    onChange={update}
+                    name='password'
+                    type='password' 
+                    id='password'/>
+                </label>
+                <button id='submit'> Login </button>
+            </form>
         </ModalContainer>
     </ComponentContainer>);
+    
 }
 
 export default Login;

@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const Article = (props)=> {
     const {article, handleDelete, handleEditSelect} = props;
-
+    
     return(<div data-testid="article">
         <ArticleStyle>
             <Container>
@@ -20,7 +20,7 @@ const Article = (props)=> {
         </ArticleStyle>
         
         <ButtonContainer>
-            <button data-testid="deleteButton" onClick={()=> {handleDelete(article.id)}}>Delete</button>                
+            <button data-testid="deleteButton" onClick={()=> {handleDelete(article.id),console.log(article.id)}}>Delete</button>                
             <button data-testid="editButton" onClick={()=> {handleEditSelect(article.id)}}>Edit</button>
         </ButtonContainer>
     </div>);
